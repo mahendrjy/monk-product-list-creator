@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.draggable {
+  cursor: grab;
+}
+
+.being-dragged .draggable {
+  cursor: not-allowed;
+}
