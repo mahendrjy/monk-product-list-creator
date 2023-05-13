@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <header className="border-b shadow-sm">
       <nav
-        className="flex items-center justify-between px-6 py-2 mx-auto max-w-7xl lg:px-8"
+        className="flex items-center justify-between px-6 py-2 mx-auto md:max-w-7xl md:px-8"
         aria-label="Global"
       >
         <div className="flex items-center gap-4">

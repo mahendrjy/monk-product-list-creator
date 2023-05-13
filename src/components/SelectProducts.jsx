@@ -238,7 +238,7 @@ const SelectProducts = ({
                         </div>
 
                         <div>
-                          <h3 className="text-lg text-gray-600">
+                          <h3 className="text-sm text-gray-600 md:text-lg">
                             {product.title}
                           </h3>
                         </div>
@@ -270,15 +270,15 @@ const SelectProducts = ({
                                 htmlFor={variant.id}
                                 className="flex items-center justify-between w-full"
                               >
-                                <h3 className="text-lg text-gray-900">
+                                <h3 className="text-sm text-gray-600 md:text-lg">
                                   {variant.title}
                                 </h3>
                                 <div className="flex items-center gap-10 pr-8">
-                                  <p className="text-lg text-gray-900">
+                                  <p className="text-sm text-gray-600 md:text-lg">
                                     {variant.inventory_quantity}{' '}
                                     available
                                   </p>
-                                  <p className="text-lg text-gray-900">
+                                  <p className="text-sm text-gray-600 md:text-lg">
                                     ${variant.price}
                                   </p>
                                 </div>
@@ -296,11 +296,11 @@ const SelectProducts = ({
         )}
 
         <div className="fixed bottom-0 left-0 right-0 flex items-center justify-between w-full px-6 py-3 bg-white border-t mt-96">
-          <h2 className="text-lg">
+          <h2 className="text-sm md:text-lg">
             {Object.keys(productCheckboxes).length} product
             selected
           </h2>
-          <div className="flex items-center w-56 gap-4">
+          <div className="flex items-center w-40 gap-4 md:w-56">
             <Button
               onClick={closeModal}
               size="medium"
