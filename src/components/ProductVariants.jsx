@@ -52,7 +52,7 @@ const ProductVariants = ({ value, index, props }) => {
               <Disclosure>
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="flex items-center justify-end w-full gap-1 text-blue-500 underline underline-offset-4">
+                    <Disclosure.Button className="flex items-center justify-end w-full gap-1 pb-2 text-blue-500 underline underline-offset-4">
                       {open ? (
                         <>
                           <span>Hide variants</span>

@@ -156,11 +156,10 @@ const SelectProducts = ({
         }
       }
     )
-
     setItems((prev) =>
       prev.map((item) =>
         item?.id === value?.id
-          ? selectedProductsWithVariants[0]
+          ? selectedProductsWithVariants.shift()
           : item
       )
     )
