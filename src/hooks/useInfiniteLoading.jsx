@@ -10,10 +10,13 @@ const useInfiniteLoading = (props) => {
 
   const loadItems = useCallback(async () => {
     setPage((prev) => prev + 1)
-    const products = await getItems({
+    let products = await getItems({
       page,
     })
-    setItems((prevItems) => [...prevItems, ...products])
+    if (typeof products !== 'object') products = []
+    if (Array.isArray(products) && products.length > 0) {
+      setItems((prevItems) => [...prevItems, ...products])
+    }
   }, [getItems, page])
 
   useEffect(() => {

@@ -1,13 +1,13 @@
 import {
-  ChevronDownIcon,
+  PencilIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ReorderIcon } from '../Logos'
-import { ProductListContext } from '../../context/ProductListContext'
+import { ReorderIcon } from './Logos'
 import { useContext, useEffect, useState } from 'react'
-import Button from '../Button'
-import SelectProducts from '../SelectProducts'
-import { classNames } from '../../utils'
+import Button from './Button'
+import SelectProducts from './SelectProducts'
+import { classNames } from '../utils'
+import { ProductListContext } from '../context/ProductListContext'
 
 const ProductItem = ({
   value,
@@ -16,11 +16,11 @@ const ProductItem = ({
   index,
   handleRemove,
 }) => {
+  const { items, setItems } = useContext(ProductListContext)
   const [addDiscount, setAddDiscount] = useState(false)
   const [discount, setDiscount] = useState(null)
   const [selectedDiscountType, setSelectedDiscountType] =
     useState(null)
-  const { items, setItems } = useContext(ProductListContext)
 
   useEffect(() => {
     if (value?.discount?.value)
@@ -57,8 +57,6 @@ const ProductItem = ({
           : item
       )
     )
-
-    setDiscount(newValue)
   }
 
   const handleDiscountTypeChange = (e) => {
@@ -79,56 +77,67 @@ const ProductItem = ({
           : item
       )
     )
-
-    setDiscount(newValue)
   }
 
   const handleVariantDiscountChange = (e) => {
-    const updatedVariants = currentItem?.variants.map((item) =>
-      item.id === value.id
-        ? {
-            ...item,
-            discount: {
-              value: Number(e.target.value) || discount,
-              type: selectedDiscountType,
-            },
-          }
-        : item
-    )
+    const newValue =
+      typeof Number(e.target.value) === 'number'
+        ? Number(e.target.value)
+        : discount
 
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === currentItem.id
-          ? { ...item, variants: updatedVariants }
-          : item
-      )
-    )
+    setItems((prev) => {
+      return prev.map((item) => {
+        if (item.id === currentItem.id) {
+          return {
+            ...item,
+            variants: item.variants.map((variant) => {
+              if (variant.id === value.id) {
+                return {
+                  ...variant,
+                  discount: {
+                    value: newValue,
+                    type: selectedDiscountType,
+                  },
+                }
+              } else {
+                return variant
+              }
+            }),
+          }
+        } else {
+          return item
+        }
+      })
+    })
   }
 
   const handleVariantDiscountTypeChange = (e) => {
     setSelectedDiscountType(e.target.value)
-    const newValue =
-      typeof Number(discount) === 'number' ? Number(discount) : 0
 
-    const updatedVariants = currentItem?.variants.map((item) =>
-      item.id === value.id
-        ? {
+    setItems((prev) => {
+      return prev.map((item) => {
+        if (item.id === currentItem.id) {
+          return {
             ...item,
-            discount: {
-              value: newValue,
-              type: e.target.value || selectedDiscountType,
-            },
+            variants: item.variants.map((variant) => {
+              if (variant.id === value.id) {
+                return {
+                  ...variant,
+                  discount: {
+                    value: 0,
+                    type: e.target.value,
+                  },
+                }
+              } else {
+                return variant
+              }
+            }),
           }
-        : item
-    )
-
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === currentItem.id
-          ? { ...item, variants: updatedVariants }
-          : item
-      )
-    )
+        } else {
+          return item
+        }
+      })
+    })
   }
 
   const handleAddDiscount = () => {
@@ -149,7 +158,13 @@ const ProductItem = ({
 
   return (
     <>
-      <SelectProducts isOpen={isOpen} closeModal={closeModal} />
+      <SelectProducts
+        value={value}
+        items={items}
+        setItems={setItems}
+        isOpen={isOpen}
+        closeModal={closeModal}
+      />
       <div
         className={classNames(
           variant ? 'justify-end' : 'justify-between',
@@ -171,27 +186,38 @@ const ProductItem = ({
             )}
           >
             <button
-              className="cursor-grab py-3 px-1 rounded-sm"
+              className="px-1 py-3 rounded-sm cursor-grab"
               data-movable-handle
               tabIndex={-1}
             >
-              <ReorderIcon className="h-4 w-4" />
+              <ReorderIcon className="w-4 h-4" />
             </button>
-            {!variant && (index || index === 0) ? (
-              <span>{index + 1}.</span>
-            ) : null}
-            <span
+            {!variant ? <span>{index + 1}.</span> : null}
+            <div
               className={classNames(
                 variant ? 'rounded-full' : ' rounded-sm',
-                'py-2 flex-1 px-4 mr-0.5 bg-white drop-shadow-md text-sm cursor-pointer'
+                'pl-2 flex-1 mr-0.5 bg-white drop-shadow-md text-sm flex items-center justify-between'
               )}
-              onClick={openModal}
             >
-              {value.title}
-            </span>
+              {value?.title?.length > 0 ? (
+                <span className="text-gray-800">
+                  {value.title}
+                </span>
+              ) : (
+                <span className="text-gray-500">
+                  Select Product
+                </span>
+              )}
+              <span
+                onClick={openModal}
+                className="flex items-center px-2 cursor-pointer h-9"
+              >
+                <PencilIcon className="w-5 h-5 text-gray-500" />
+              </span>
+            </div>
           </div>
         </div>
-        <div className="w-1/3 flex items-center gap-2">
+        <div className="flex items-center gap-2">
           {addDiscount ? (
             <>
               <input
@@ -199,7 +225,7 @@ const ProductItem = ({
                 min="0"
                 className={classNames(
                   variant ? 'rounded-full' : 'rounded-sm',
-                  'p-2 w-20  bg-white drop-shadow-md text-sm'
+                  'px-3 py-2 h-9 w-16  bg-white drop-shadow-md text-xs border-none'
                 )}
                 value={discount}
                 onChange={
@@ -208,7 +234,7 @@ const ProductItem = ({
                     : handleDiscountChange
                 }
               />
-              <div className="relative">
+              <div className="relative bg-white w-22 h-9 drop-shadow-md">
                 <select
                   value={selectedDiscountType}
                   onChange={
@@ -218,29 +244,25 @@ const ProductItem = ({
                   }
                   className={classNames(
                     variant ? 'rounded-full' : 'rounded-sm',
-                    'py-2 px-7 bg-white drop-shadow-md text-sm appearance-none'
+                    'py-2 border-none appearance-none relative w-24 h-9 text-xs'
                   )}
                 >
                   <option value="percent">% Off</option>
                   <option value="flat">flat Off</option>
                 </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pointer-events-none pr-4">
-                  <ChevronDownIcon className="w-4 h-4 text-gra-500 -mr-2" />
-                </div>
               </div>
             </>
           ) : (
-            <Button
-              onClick={handleAddDiscount}
-              className="w-full"
-            >
+            <Button onClick={handleAddDiscount} className="w-40">
               Add Discount
             </Button>
           )}
           {items.length > 1 ? (
-            <button onClick={handleRemove}>
+            <button
+              onClick={() => handleRemove(value.id, index)}
+            >
               <XMarkIcon
-                className="h-6 w-6"
+                className="w-5 h-5 ml-1 text-gray-500"
                 aria-hidden="true"
               />
             </button>

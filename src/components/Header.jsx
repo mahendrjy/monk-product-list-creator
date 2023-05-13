@@ -14,10 +14,10 @@ const Header = () => {
   return (
     <header className="border-b shadow-sm">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between py-2 px-6 lg:px-8"
+        className="flex items-center justify-between px-6 py-2 mx-auto max-w-7xl lg:px-8"
         aria-label="Global"
       >
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           {navigation.map((item) => (
             <Link
               key={item.name}

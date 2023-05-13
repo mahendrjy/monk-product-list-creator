@@ -1,4 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
+import forms from '@tailwindcss/forms'
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -9,8 +10,9 @@ export default {
       },
       spacing: {
         153: '38.25rem',
+        22: '5.5rem',
       },
     },
   },
-  plugins: [],
+  plugins: [forms],
 }

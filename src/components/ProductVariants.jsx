@@ -5,12 +5,11 @@ import {
 } from '@heroicons/react/24/outline'
 import { Disclosure } from '@headlessui/react'
 import ProductItem from './ProductItem'
-import { ProductListContext } from '../../context/ProductListContext'
 import { useContext } from 'react'
+import { ProductListContext } from '../context/ProductListContext'
 
 const ProductVariants = ({ value, index, props }) => {
   const { items, setItems } = useContext(ProductListContext)
-
   const handleVariantMove = ({ oldIndex, newIndex }) => {
     const arrayMoveMutate = arrayMove(
       value.variants,
@@ -49,28 +48,30 @@ const ProductVariants = ({ value, index, props }) => {
       renderList={({ children, props }) => (
         <>
           {value?.variants.length > 1 ? (
-            <Disclosure {...props}>
-              {({ open }) => (
-                <>
-                  <Disclosure.Button className="w-full text-blue-500 underline underline-offset-4 flex items-center gap-1 justify-end">
-                    {open ? (
-                      <>
-                        <span>Hide variants</span>
-                        <ChevronUpIcon className="w-5 h-5 pt-1" />
-                      </>
-                    ) : (
-                      <>
-                        <span>Show variants</span>
-                        <ChevronDownIcon className="w-5 h-5 pt-1" />
-                      </>
-                    )}
-                  </Disclosure.Button>
-                  <Disclosure.Panel>
-                    <ul {...props}>{children}</ul>
-                  </Disclosure.Panel>
-                </>
-              )}
-            </Disclosure>
+            <>
+              <Disclosure>
+                {({ open }) => (
+                  <>
+                    <Disclosure.Button className="flex items-center justify-end w-full gap-1 text-blue-500 underline underline-offset-4">
+                      {open ? (
+                        <>
+                          <span>Hide variants</span>
+                          <ChevronUpIcon className="w-5 h-5 pt-1" />
+                        </>
+                      ) : (
+                        <>
+                          <span>Show variants</span>
+                          <ChevronDownIcon className="w-5 h-5 pt-1" />
+                        </>
+                      )}
+                    </Disclosure.Button>
+                    <Disclosure.Panel>
+                      <ul {...props}>{children}</ul>
+                    </Disclosure.Panel>
+                  </>
+                )}
+              </Disclosure>
+            </>
           ) : (
             <div {...props}>{children}</div>
           )}
