@@ -17,7 +17,6 @@ const SelectProducts = ({
   const [products, setProducts] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
   const { items: allProducts, loadMoreRef } = useInfiniteLoading(
     {
       getItems: async ({ page }) => {
@@ -28,7 +27,6 @@ const SelectProducts = ({
           return res.json()
         } catch (error) {
           console.error('Error fetching products:', error)
-          setError('Error fetching products')
         }
       },
     }
@@ -43,7 +41,7 @@ const SelectProducts = ({
     } else {
       setProducts(allProducts)
     }
-  }, [debouncedSearchTerm, allProducts, products])
+  }, [debouncedSearchTerm, allProducts])
 
   const fetchProductsWithSearch = async (searchTerm) => {
     try {
@@ -52,7 +50,7 @@ const SelectProducts = ({
       )
       const data = await res.json()
 
-      if (Array.isArray(data)) {
+      if (data.length > 0) {
         setProducts(data)
       } else {
         setProducts([])
@@ -62,7 +60,6 @@ const SelectProducts = ({
     } catch (error) {
       console.error('Error fetching searchProducts:', error)
       setLoading(false)
-      setError('Error fetching searchProducts')
     }
   }
 
@@ -209,7 +206,6 @@ const SelectProducts = ({
             <XMarkIcon className="w-6 h-6 -mr-1" />
           </button>
         </div>
-        {error ? <p>{error}</p> : null}
         {loading || products.length === 0 ? (
           <p className="w-full text-center">Loading...</p>
         ) : (
