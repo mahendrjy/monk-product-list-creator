@@ -7,14 +7,6 @@ import { ProductListContext } from '../context/ProductListContext'
 const ProductList = () => {
   const { items, setItems } = useContext(ProductListContext)
 
-  const handleRemove = (id, index) => {
-    setItems((prev) => {
-      const updatedItems = [...prev]
-      updatedItems.splice(index, 1)
-      return updatedItems
-    })
-  }
-
   const handleMove = ({ oldIndex, newIndex }) =>
     setItems(arrayMove(items, oldIndex, newIndex))
 
@@ -39,7 +31,6 @@ const ProductList = () => {
                 value={value}
                 variant={false}
                 index={index}
-                handleRemove={handleRemove}
                 items={items}
                 setItems={setItems}
               />

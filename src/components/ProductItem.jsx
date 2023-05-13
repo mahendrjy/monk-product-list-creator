@@ -8,14 +8,9 @@ import Button from './Button'
 import SelectProducts from './SelectProducts'
 import { classNames } from '../utils'
 import { ProductListContext } from '../context/ProductListContext'
+import { arrayRemove } from 'react-movable'
 
-const ProductItem = ({
-  value,
-  currentItem,
-  variant,
-  index,
-  handleRemove,
-}) => {
+const ProductItem = ({ value, currentItem, variant, index }) => {
   const { items, setItems } = useContext(ProductListContext)
   const [addDiscount, setAddDiscount] = useState(false)
   const [discount, setDiscount] = useState(null)
@@ -253,13 +248,22 @@ const ProductItem = ({
               </div>
             </>
           ) : (
-            <Button onClick={handleAddDiscount} className="w-40">
+            <Button
+              onClick={handleAddDiscount}
+              className="w-22 md:w-40"
+            >
               Add Discount
             </Button>
           )}
           {items.length > 1 ? (
             <button
-              onClick={() => handleRemove(value.id, index)}
+              onClick={() => {
+                setItems(
+                  typeof index !== 'undefined'
+                    ? arrayRemove(items, index)
+                    : items
+                )
+              }}
             >
               <XMarkIcon
                 className="w-5 h-5 ml-1 text-gray-500"
